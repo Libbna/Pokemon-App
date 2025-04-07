@@ -1,21 +1,31 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router";
-import Sidebar from "./components/Sidebar";
-import PokemonDetails from "./components/PokemonDetails";
+// App.js
+import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import PokemonList from './pages/PokemonList';
+import Header from './components/Header';
+import PokemonDetails from './components/PokemonDetails';
 
 function App() {
   return (
-    <Router>
-      <div className="flex">
-        <Sidebar />
-        <div className="w-3/4 p-6">
-          <Routes>
-            <Route path="/pokemon/:name" element={<PokemonDetails />} />
-            <Route path="/" element={<p>Select a Pokémon from the list.</p>} />
-          </Routes>
-        </div>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/pokemon-list/*"
+            element={
+              <ProtectedRoute>
+                <PokemonList />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/pokemon/:name" element={<PokemonDetails />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
